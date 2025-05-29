@@ -12,5 +12,5 @@ class TestPet:
         with allure.step("Проверка статуса ответа"):
             assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
 
-        with allure.step("Проверка содержимого ответа")Ж
-        assert response.text == "Pet deleted", "Текст ошибки не совпал с ожидаемым"
+        with allure.step("Проверка содержимого ответа"):
+            assert response.text == "Pet deleted", "Текст ошибки не совпал с ожидаемым"
