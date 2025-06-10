@@ -108,7 +108,7 @@ class TestPet:
             pet_id = create_pet["id"]
 
         with allure.step("Отправка на получение информации о питомце"):
-            response = requests.post(url=f"{BASE_URL}/pet/{pet_id}")
+            response = requests.get(url=f"{BASE_URL}/pet/{pet_id}")
             assert response.status_code == 200
             assert response.json()["id"] == pet_id
 
