@@ -101,3 +101,43 @@ class TestPet:
             assert response_json['tags'][0]['id'] == payload['tags'][0]['id'], 'tags id не совпадает с ожидаемым'
             assert response_json['tags'][0]['name'] == payload['tags'][0]['name'], 'tags name не совпадает с ожидаемым'
             assert response_json['status'] == payload['status'], "status питомца не совпадает с ожидаемым"
+
+    @allure.title("Получение информации о питомце по ID")
+    def test_get_info_by_id(self, create_pet):
+        with allure.step("Получение ID питомца"):
+            pet_id = create_pet["id"]
+
+        with allure.step("Отправка на получение информации о питомце"):
+            response = requests.post(url=f"{BASE_URL}/pet/{pet_id}")
+            assert response.status_code == 200
+            assert response.json()["id"] == pet_id
+
+    @allure.title("Обновление информации о питомце")
+    def test_put_info_about_pet(self, create_pet):
+        with allure.step("Получение ID питомца"):
+            pet_id = create_pet["id"]
+
+        with allure.step("Отправка информации на обновление информации о питомце"):
+            payload = {
+                        "id": pet_id,
+                        "name": "Buddy Updated",
+                        "status": "sold"
+                    }
+            response = requests.put(url=f"{BASE_URL}/pet", json=payload)
+            assert response.status_code == 200
+            assert response.json()["id"] == pet_id
+            assert response.json()["name"] == payload["name"]
+            assert response.json()["status"] == payload["status"]
+
+    @allure.title("Удаление питомца по ID")
+    def test_delete_info_about_pet(self, create_pet):
+        with allure.step("Получение питомца по ID"):
+            pet_id = create_pet["id"]
+
+        with allure.step("Отправка запроса на удаление питомца по ID"):
+            response = requests.delete(url=f"{BASE_URL}/pet/{pet_id}")
+            assert response.status_code == 200
+
+        with allure.step("Проверка удаления питомца через GET запрос"):
+            response = requests.get(url=f"{BASE_URL}/pet/{pet_id}")
+            assert response.status_code == 404
