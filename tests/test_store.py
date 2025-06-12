@@ -51,11 +51,11 @@ class TestStore:
         with allure.step("Получение ID заказа"):
             order_id = order_placing["id"]
 
-        with allure.step("Отправка запроса на удаление заказа по ID"):
+        with allure.step("Отправка запроса на удаление заказа по ID  и проверка ответа"):
             response = requests.delete(url=f"{BASE_URL}/store/order/{order_id}")
             assert response.status_code == 200
 
-        with allure.step("Отправка запроса на получение удаленного заказа по ID"):
+        with allure.step("Отправка запроса на получение удаленного заказа по ID и проверка ответа"):
             response = requests.get(url=f"{BASE_URL}/store/order/{order_id}")
             assert response.status_code == 404
 
@@ -63,7 +63,16 @@ class TestStore:
     @allure.title("Попытка получить информацию о несуществующем заказе")
     def test_get_info_about_nonexistent_order(self):
         with allure.step("Отправка запроса на получение информации о несуществующем заказе и проверка статус-кода"):
-            response = requests.get(f"{BASE_URL}/store/order/9999")
+            response = requests.get(url=f"{BASE_URL}/store/order/9999")
             assert response.status_code == 404
 
+    @allure.title("Получение инвентаря магазина")
+    def test_get_store_inventory(self):
+        with allure.step("Отправка запроса на получение инвентаря магазина и проверка ответа"):
+            response = requests.get(url=f"{BASE_URL}/store/inventory")
+            response_json = response.json()
+            assert response.status_code == 200
 
+        with allure.step("Проверка получения данных инвентаря"):
+            assert isinstance(response_json["approved"], int)
+            assert isinstance(response_json["delivered"], int)
