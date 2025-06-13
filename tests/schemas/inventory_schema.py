@@ -5,5 +5,5 @@ INVENTORY_SCHEMA = {
     "placed": { "type": "integer" },
     "delivered": { "type": "integer" }
   },
-  "required": ["approved", "placed", "delivered"]
+  "required": ["approved", "delivered"]
 }
