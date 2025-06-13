@@ -4,6 +4,7 @@ import requests
 import jsonschema
 
 from .conftest import order_placing
+from .schemas.inventory_schema import INVENTORY_SCHEMA
 from .schemas.store_schema import STORE_SCHEMA
 from tests.test_pet import BASE_URL
 
@@ -71,8 +72,7 @@ class TestStore:
         with allure.step("Отправка запроса на получение инвентаря магазина и проверка ответа"):
             response = requests.get(url=f"{BASE_URL}/store/inventory")
             response_json = response.json()
-            assert response.status_code == 200
 
-        with allure.step("Проверка получения данных инвентаря"):
-            assert isinstance(response_json["approved"], int)
-            assert isinstance(response_json["delivered"], int)
+        with allure.step("Проверка получения ответа и валидации json-схемы"):
+            assert response.status_code == 200
+            jsonschema.validate(response.json(), INVENTORY_SCHEMA)
